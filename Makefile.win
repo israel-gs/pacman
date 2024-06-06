@@ -6,12 +6,12 @@ CC       = gcc.exe -D__DEBUG__
 WINDRES  = windres.exe
 OBJ      = main.o miniwin.o
 LINKOBJ  = main.o miniwin.o
-LIBS     = -L"C:/Users/israe/Desktop/Dev-Cpp/MinGW64/lib" -L"C:/Users/israe/Desktop/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc -mwindows -g3
-INCS     = -I"C:/Users/israe/Desktop/Dev-Cpp/MinGW64/include" -I"C:/Users/israe/Desktop/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Users/israe/Desktop/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
-CXXINCS  = -I"C:/Users/israe/Desktop/Dev-Cpp/MinGW64/include" -I"C:/Users/israe/Desktop/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Users/israe/Desktop/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Users/israe/Desktop/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
+LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -L"C:/Users/karin/Desktop/archivosSDL/SDL2-devel-2.30.3-mingw/SDL2-2.30.3/x86_64-w64-mingw32/lib" -L"C:/Users/karin/Desktop/archivosSDL/SDL2_mixer-devel-2.8.0-mingw/SDL2_mixer-2.8.0/x86_64-w64-mingw32/lib" -L"C:/Users/karin/Desktop/archivosSDL/SFML-2.4.2-windows-gcc-4.9.2-tdm-64-bit/SFML-2.4.2/lib" -static-libgcc -mwindows -g3
+INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
+CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++" -I"C:/Users/karin/Desktop/archivosSDL/SDL2_mixer-devel-2.8.0-mingw/SDL2_mixer-2.8.0/x86_64-w64-mingw32/include/SDL2" -I"C:/Users/karin/Desktop/archivosSDL/SDL2-devel-2.30.3-mingw/SDL2-2.30.3/x86_64-w64-mingw32/include/SDL2"
 BIN      = pacman.exe
-CXXFLAGS = $(CXXINCS) -g3
-CFLAGS   = $(INCS) -g3
+CXXFLAGS = $(CXXINCS) -g3 -std=c++11                                                                                                                      -std=gnu++11
+CFLAGS   = $(INCS) -g3 -std=c++11                                                                                                                      -std=gnu++11
 RM       = rm.exe -f
 
 .PHONY: all all-before all-after clean clean-custom

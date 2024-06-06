@@ -5,506 +5,101 @@ using namespace std;
 
 const int ANCHO = 19;
 const int ALTO = 21;
-const int TAMANO = 20;
+const int TAMANO = 25;
 
 class Mapa
 {
 private:
-	vector<vector<char> > laberinto;
+	vector<vector<char>> laberinto;
 
 public:
 	Mapa()
 	{
-		vector<char> fila1;
-		fila1.push_back('#');
-		fila1.push_back('#');
-		fila1.push_back('#');
-		fila1.push_back('#');
-		fila1.push_back('#');
-		fila1.push_back('#');
-		fila1.push_back('#');
-		fila1.push_back('#');
-		fila1.push_back('#');
-		fila1.push_back('#');
-		fila1.push_back('#');
-		fila1.push_back('#');
-		fila1.push_back('#');
-		fila1.push_back('#');
-		fila1.push_back('#');
-		fila1.push_back('#');
-		fila1.push_back('#');
-		fila1.push_back('#');
-		fila1.push_back('#');
 
-		vector<char> fila2;
-		fila2.push_back('#');
-		fila2.push_back('.');
-		fila2.push_back('.');
-		fila2.push_back('.');
-		fila2.push_back('.');
-		fila2.push_back('.');
-		fila2.push_back('.');
-		fila2.push_back('.');
-		fila2.push_back('.');
-		fila2.push_back('#');
-		fila2.push_back('.');
-		fila2.push_back('.');
-		fila2.push_back('.');
-		fila2.push_back('.');
-		fila2.push_back('.');
-		fila2.push_back('.');
-		fila2.push_back('.');
-		fila2.push_back('.');
-		fila2.push_back('#');
+		vector<char> fila1 = {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'};
+        vector<char> fila2 = {'#', '.', '.', '.', '.', '.', '.', '.', '.', '#', '.', '.', '.', '.', '.', '.', '.', '.', '#'};
+        vector<char> fila3 = {'#', '.', '#', '#', '.', '#', '#', '#', '.', '#', '.', '#', '#', '#', '.', '#', '#', '.', '#'};
+        vector<char> fila4 = {'#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#'};
+        vector<char> fila5 = {'#', '.', '#', '#', '.', '#', '.', '#', '#', '#', '#', '#', '.', '#', '.', '#', '#', '.', '#'};
+        vector<char> fila6 = {'#', '.', '.', '.', '.', '#', '.', '.', '.', '#', '.', '.', '.', '#', '.', '.', '.', '.', '#'};
+        vector<char> fila7 = {'#', '#', '#', '#', '.', '#', '#', '#', '.', '#', '.', '#', '#', '#', '.', '#', '#', '#', '#'};
+        vector<char> fila8 = {'.', '.', '.', '#', '.', '#', '.', '.', '.', '.', '.', '.', '.', '#', '.', '#', '.', '.', '.'};
+        vector<char> fila9 = {'#', '#', '#', '#', '.', '#', '.', '#', '#', '.', '#', '#', '.', '#', '.', '#', '#', '#', '#'};
+        vector<char> fila10 = {'.', '.', '.', '.', '.', '.', '.', '#', '.', '.', '.', '#', '.', '.', '.', '.', '.', '.', '.'};
+        vector<char> fila11 = {'#', '#', '#', '#', '.', '#', '.', '#', '#', '#', '#', '#', '.', '#', '.', '#', '#', '#', '#'};
+        vector<char> fila12 = {'.', '.', '.', '#', '.', '#', '.', '.', '.', '.', '.', '.', '.', '#', '.', '#', '.', '.', '.'};
+        vector<char> fila13 = {'#', '#', '#', '#', '.', '#', '.', '#', '#', '#', '#', '#', '.', '#', '.', '#', '#', '#', '#'};
+        vector<char> fila14 = {'#', '.', '.', '.', '.', '.', '.', '.', '.', '#', '.', '.', '.', '.', '.', '.', '.', '.', '#'};
+        vector<char> fila15 = {'#', '.', '#', '#', '.', '#', '#', '#', '.', '#', '.', '#', '#', '#', '.', '#', '#', '.', '#'};
+        vector<char> fila16 = {'#', '.', '.', '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#', '.', '.', '#'};
+        vector<char> fila17 = {'#', '#', '.', '#', '.', '#', '.', '#', '#', '#', '#', '#', '.', '#', '.', '#', '.', '#', '#'};
+        vector<char> fila18 = {'#', '.', '.', '.', '.', '#', '.', '.', '.', '#', '.', '.', '.', '#', '.', '.', '.', '.', '#'};
+        vector<char> fila19 = {'#', '.', '#', '#', '#', '#', '#', '#', '.', '#', '.', '#', '#', '#', '#', '#', '#', '.', '#'};
+        vector<char> fila20 = {'#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#'};
+        vector<char> fila21 = {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'};
 
-		vector<char> fila3;
-		fila3.push_back('#');
-		fila3.push_back('.');
-		fila3.push_back('#');
-		fila3.push_back('#');
-		fila3.push_back('.');
-		fila3.push_back('#');
-		fila3.push_back('#');
-		fila3.push_back('#');
-		fila3.push_back('.');
-		fila3.push_back('#');
-		fila3.push_back('.');
-		fila3.push_back('#');
-		fila3.push_back('#');
-		fila3.push_back('#');
-		fila3.push_back('.');
-		fila3.push_back('#');
-		fila3.push_back('#');
-		fila3.push_back('.');
-		fila3.push_back('#');
-
-		vector<char> fila4;
-		fila4.push_back('#');
-		fila4.push_back('.');
-		fila4.push_back('.');
-		fila4.push_back('.');
-		fila4.push_back('.');
-		fila4.push_back('.');
-		fila4.push_back('.');
-		fila4.push_back('.');
-		fila4.push_back('.');
-		fila4.push_back('.');
-		fila4.push_back('.');
-		fila4.push_back('.');
-		fila4.push_back('.');
-		fila4.push_back('.');
-		fila4.push_back('.');
-		fila4.push_back('.');
-		fila4.push_back('.');
-		fila4.push_back('.');
-		fila4.push_back('#');
-
-		vector<char> fila5;
-		fila5.push_back('#');
-		fila5.push_back('.');
-		fila5.push_back('#');
-		fila5.push_back('#');
-		fila5.push_back('.');
-		fila5.push_back('#');
-		fila5.push_back('.');
-		fila5.push_back('#');
-		fila5.push_back('#');
-		fila5.push_back('#');
-		fila5.push_back('#');
-		fila5.push_back('#');
-		fila5.push_back('.');
-		fila5.push_back('#');
-		fila5.push_back('.');
-		fila5.push_back('#');
-		fila5.push_back('#');
-		fila5.push_back('.');
-		fila5.push_back('#');
-
-		vector<char> fila6;
-		fila6.push_back('#');
-		fila6.push_back('.');
-		fila6.push_back('.');
-		fila6.push_back('.');
-		fila6.push_back('.');
-		fila6.push_back('#');
-		fila6.push_back('.');
-		fila6.push_back('.');
-		fila6.push_back('.');
-		fila6.push_back('#');
-		fila6.push_back('.');
-		fila6.push_back('.');
-		fila6.push_back('.');
-		fila6.push_back('#');
-		fila6.push_back('.');
-		fila6.push_back('.');
-		fila6.push_back('.');
-		fila6.push_back('.');
-		fila6.push_back('#');
-
-		vector<char> fila7;
-		fila7.push_back('#');
-		fila7.push_back('#');
-		fila7.push_back('#');
-		fila7.push_back('#');
-		fila7.push_back('.');
-		fila7.push_back('#');
-		fila7.push_back('#');
-		fila7.push_back('#');
-		fila7.push_back('.');
-		fila7.push_back('#');
-		fila7.push_back('.');
-		fila7.push_back('#');
-		fila7.push_back('#');
-		fila7.push_back('#');
-		fila7.push_back('.');
-		fila7.push_back('#');
-		fila7.push_back('#');
-		fila7.push_back('#');
-		fila7.push_back('#');
-
-		vector<char> fila8;
-		fila8.push_back('.');
-		fila8.push_back('.');
-		fila8.push_back('.');
-		fila8.push_back('#');
-		fila8.push_back('.');
-		fila8.push_back('#');
-		fila8.push_back('.');
-		fila8.push_back('.');
-		fila8.push_back('.');
-		fila8.push_back('.');
-		fila8.push_back('.');
-		fila8.push_back('.');
-		fila8.push_back('.');
-		fila8.push_back('#');
-		fila8.push_back('.');
-		fila8.push_back('#');
-		fila8.push_back('.');
-		fila8.push_back('.');
-		fila8.push_back('.');
-
-		vector<char> fila9;
-		fila9.push_back('#');
-		fila9.push_back('#');
-		fila9.push_back('#');
-		fila9.push_back('#');
-		fila9.push_back('.');
-		fila9.push_back('#');
-		fila9.push_back('.');
-		fila9.push_back('#');
-		fila9.push_back('#');
-		fila9.push_back('.');
-		fila9.push_back('#');
-		fila9.push_back('#');
-		fila9.push_back('.');
-		fila9.push_back('#');
-		fila9.push_back('.');
-		fila9.push_back('#');
-		fila9.push_back('#');
-		fila9.push_back('#');
-		fila9.push_back('#');
-
-		vector<char> fila10;
-		fila10.push_back('.');
-		fila10.push_back('.');
-		fila10.push_back('.');
-		fila10.push_back('.');
-		fila10.push_back('.');
-		fila10.push_back('.');
-		fila10.push_back('.');
-		fila10.push_back('#');
-		fila10.push_back('.');
-		fila10.push_back('.');
-		fila10.push_back('.');
-		fila10.push_back('#');
-		fila10.push_back('.');
-		fila10.push_back('.');
-		fila10.push_back('.');
-		fila10.push_back('.');
-		fila10.push_back('.');
-		fila10.push_back('.');
-		fila10.push_back('.');
-
-		vector<char> fila11;
-		fila11.push_back('#');
-		fila11.push_back('#');
-		fila11.push_back('#');
-		fila11.push_back('#');
-		fila11.push_back('.');
-		fila11.push_back('#');
-		fila11.push_back('.');
-		fila11.push_back('#');
-		fila11.push_back('#');
-		fila11.push_back('#');
-		fila11.push_back('#');
-		fila11.push_back('#');
-		fila11.push_back('.');
-		fila11.push_back('#');
-		fila11.push_back('.');
-		fila11.push_back('#');
-		fila11.push_back('#');
-		fila11.push_back('#');
-		fila11.push_back('#');
-
-		vector<char> fila12;
-		fila12.push_back('.');
-		fila12.push_back('.');
-		fila12.push_back('.');
-		fila12.push_back('#');
-		fila12.push_back('.');
-		fila12.push_back('#');
-		fila12.push_back('.');
-		fila12.push_back('.');
-		fila12.push_back('.');
-		fila12.push_back('.');
-		fila12.push_back('.');
-		fila12.push_back('.');
-		fila12.push_back('.');
-		fila12.push_back('#');
-		fila12.push_back('.');
-		fila12.push_back('#');
-		fila12.push_back('.');
-		fila12.push_back('.');
-		fila12.push_back('.');
-
-		vector<char> fila13;
-		fila13.push_back('#');
-		fila13.push_back('#');
-		fila13.push_back('#');
-		fila13.push_back('#');
-		fila13.push_back('.');
-		fila13.push_back('#');
-		fila13.push_back('.');
-		fila13.push_back('#');
-		fila13.push_back('#');
-		fila13.push_back('#');
-		fila13.push_back('#');
-		fila13.push_back('#');
-		fila13.push_back('.');
-		fila13.push_back('#');
-		fila13.push_back('.');
-		fila13.push_back('#');
-		fila13.push_back('#');
-		fila13.push_back('#');
-		fila13.push_back('#');
-
-		vector<char> fila14;
-		fila14.push_back('#');
-		fila14.push_back('.');
-		fila14.push_back('.');
-		fila14.push_back('.');
-		fila14.push_back('.');
-		fila14.push_back('.');
-		fila14.push_back('.');
-		fila14.push_back('.');
-		fila14.push_back('.');
-		fila14.push_back('#');
-		fila14.push_back('.');
-		fila14.push_back('.');
-		fila14.push_back('.');
-		fila14.push_back('.');
-		fila14.push_back('.');
-		fila14.push_back('.');
-		fila14.push_back('.');
-		fila14.push_back('.');
-		fila14.push_back('#');
-
-		vector<char> fila15;
-		fila15.push_back('#');
-		fila15.push_back('.');
-		fila15.push_back('#');
-		fila15.push_back('#');
-		fila15.push_back('.');
-		fila15.push_back('#');
-		fila15.push_back('#');
-		fila15.push_back('#');
-		fila15.push_back('.');
-		fila15.push_back('#');
-		fila15.push_back('.');
-		fila15.push_back('#');
-		fila15.push_back('#');
-		fila15.push_back('#');
-		fila15.push_back('.');
-		fila15.push_back('#');
-		fila15.push_back('#');
-		fila15.push_back('.');
-		fila15.push_back('#');
-
-		vector<char> fila16;
-		fila16.push_back('#');
-		fila16.push_back('.');
-		fila16.push_back('.');
-		fila16.push_back('#');
-		fila16.push_back('.');
-		fila16.push_back('.');
-		fila16.push_back('.');
-		fila16.push_back('.');
-		fila16.push_back('.');
-		fila16.push_back('.');
-		fila16.push_back('.');
-		fila16.push_back('.');
-		fila16.push_back('.');
-		fila16.push_back('.');
-		fila16.push_back('.');
-		fila16.push_back('#');
-		fila16.push_back('.');
-		fila16.push_back('.');
-		fila16.push_back('#');
-
-		vector<char> fila17;
-		fila17.push_back('#');
-		fila17.push_back('#');
-		fila17.push_back('.');
-		fila17.push_back('#');
-		fila17.push_back('.');
-		fila17.push_back('#');
-		fila17.push_back('.');
-		fila17.push_back('#');
-		fila17.push_back('#');
-		fila17.push_back('#');
-		fila17.push_back('#');
-		fila17.push_back('#');
-		fila17.push_back('.');
-		fila17.push_back('#');
-		fila17.push_back('.');
-		fila17.push_back('#');
-		fila17.push_back('.');
-		fila17.push_back('#');
-		fila17.push_back('#');
-
-		vector<char> fila18;
-		fila18.push_back('#');
-		fila18.push_back('.');
-		fila18.push_back('.');
-		fila18.push_back('.');
-		fila18.push_back('.');
-		fila18.push_back('#');
-		fila18.push_back('.');
-		fila18.push_back('.');
-		fila18.push_back('.');
-		fila18.push_back('#');
-		fila18.push_back('.');
-		fila18.push_back('.');
-		fila18.push_back('.');
-		fila18.push_back('#');
-		fila18.push_back('.');
-		fila18.push_back('.');
-		fila18.push_back('.');
-		fila18.push_back('.');
-		fila18.push_back('#');
-
-		vector<char> fila19;
-		fila19.push_back('#');
-		fila19.push_back('.');
-		fila19.push_back('#');
-		fila19.push_back('#');
-		fila19.push_back('#');
-		fila19.push_back('#');
-		fila19.push_back('#');
-		fila19.push_back('#');
-		fila19.push_back('.');
-		fila19.push_back('#');
-		fila19.push_back('.');
-		fila19.push_back('#');
-		fila19.push_back('#');
-		fila19.push_back('#');
-		fila19.push_back('#');
-		fila19.push_back('#');
-		fila19.push_back('#');
-		fila19.push_back('.');
-		fila19.push_back('#');
-
-		vector<char> fila20;
-		fila20.push_back('#');
-		fila20.push_back('.');
-		fila20.push_back('.');
-		fila20.push_back('.');
-		fila20.push_back('.');
-		fila20.push_back('.');
-		fila20.push_back('.');
-		fila20.push_back('.');
-		fila20.push_back('.');
-		fila20.push_back('.');
-		fila20.push_back('.');
-		fila20.push_back('.');
-		fila20.push_back('.');
-		fila20.push_back('.');
-		fila20.push_back('.');
-		fila20.push_back('.');
-		fila20.push_back('.');
-		fila20.push_back('.');
-		fila20.push_back('#');
-
-		vector<char> fila21;
-		fila21.push_back('#');
-		fila21.push_back('#');
-		fila21.push_back('#');
-		fila21.push_back('#');
-		fila21.push_back('#');
-		fila21.push_back('#');
-		fila21.push_back('#');
-		fila21.push_back('#');
-		fila21.push_back('#');
-		fila21.push_back('#');
-		fila21.push_back('#');
-		fila21.push_back('#');
-		fila21.push_back('#');
-		fila21.push_back('#');
-		fila21.push_back('#');
-		fila21.push_back('#');
-		fila21.push_back('#');
-		fila21.push_back('#');
-		fila21.push_back('#');
-
-		laberinto.push_back(fila1);
-		laberinto.push_back(fila2);
-		laberinto.push_back(fila3);
-		laberinto.push_back(fila4);
-		laberinto.push_back(fila5);
-		laberinto.push_back(fila6);
-		laberinto.push_back(fila7);
-		laberinto.push_back(fila8);
-		laberinto.push_back(fila9);
-		laberinto.push_back(fila10);
-		laberinto.push_back(fila11);
-		laberinto.push_back(fila12);
-		laberinto.push_back(fila13);
-		laberinto.push_back(fila14);
-		laberinto.push_back(fila15);
-		laberinto.push_back(fila16);
-		laberinto.push_back(fila17);
-		laberinto.push_back(fila18);
-		laberinto.push_back(fila19);
-		laberinto.push_back(fila20);
-		laberinto.push_back(fila21);
+        laberinto.push_back(fila1);
+        laberinto.push_back(fila2);
+        laberinto.push_back(fila3);
+        laberinto.push_back(fila4);
+        laberinto.push_back(fila5);
+        laberinto.push_back(fila6);
+        laberinto.push_back(fila7);
+        laberinto.push_back(fila8);
+        laberinto.push_back(fila9);
+        laberinto.push_back(fila10);
+        laberinto.push_back(fila11);
+        laberinto.push_back(fila12);
+        laberinto.push_back(fila13);
+        laberinto.push_back(fila14);
+        laberinto.push_back(fila15);
+        laberinto.push_back(fila16);
+        laberinto.push_back(fila17);
+        laberinto.push_back(fila18);
+        laberinto.push_back(fila19);
+        laberinto.push_back(fila20);
+        laberinto.push_back(fila21);
 	}
 
 	void draw()
 	{
-		color(AZUL);
-		int y = 0;
-		// for (auto it = laberinto.begin(); it != laberinto.end(); ++it, ++y) {
-		// for (vector<Enemy>::iterator it = enemies.begin(); it != enemies.end();)
-		for (vector<vector<char> >::iterator it = laberinto.begin(); it != laberinto.end(); ++it, ++y)
-		{
-			// y = y + 1;
-			int x = 0;
-			// for (auto jt = it->begin(); jt != it->end(); ++jt, ++x) {
-			for (vector<char>::iterator jt = it->begin(); jt != it->end(); ++jt, ++x)
-			{
-				// x = x + 1;
-				if (*jt == '#')
-				{
-					rectangulo_lleno(x * TAMANO, y * TAMANO, (x + 1) * TAMANO, (y + 1) * TAMANO);
-				}
-			}
-		}
+	    int y = 0;
+	    for (auto it = laberinto.begin(); it != laberinto.end(); ++it, ++y)
+	    {
+	        int x = 0;
+	        for (auto jt = it->begin(); jt != it->end(); ++jt, ++x)
+	        {
+	            if (*jt == '#')
+	            {
+	                color(AZUL);
+	                rectangulo_lleno(x * TAMANO, y * TAMANO, (x + 1) * TAMANO, (y + 1) * TAMANO);
+	            }
+	            else if (*jt == '.')
+	            {
+	                color(BLANCO);
+	                circulo_lleno(x * TAMANO + TAMANO / 2, y * TAMANO + TAMANO / 2, TAMANO / 8);
+	            }
+	        }
+	    }
 	}
 
 	bool es_pared(int x, int y) const
 	{
 		return laberinto[y][x] == '#';
 	}
+	
+	bool hay_dot(int x, int y) const
+    {
+        return laberinto[y][x] == '.';
+    }
+
+    void comer_dot(int x, int y)
+    {
+        if (laberinto[y][x] == '.')
+        {
+            laberinto[y][x] = ' ';
+        }
+    }
 };
 
 class Pacman
@@ -516,7 +111,7 @@ private:
 public:
 	Pacman(int _x, int _y, int _size) : x(_x), y(_y), size(_size) {}
 
-	void move(int dx, int dy, const Mapa &mapa)
+	void move(int dx, int dy,  Mapa &mapa)
 	{
 		if (x == 0 && dx == -1)
 		{
@@ -533,7 +128,12 @@ public:
 			if (!mapa.es_pared(nuevo_x, nuevo_y))
 			{
 				x = nuevo_x;
-				y = nuevo_y;
+                y = nuevo_y;
+                if (mapa.hay_dot(x, y))
+                {
+                    mapa.comer_dot(x, y);
+                }
+
 			}
 		}
 	}
