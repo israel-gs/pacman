@@ -1,3 +1,3 @@
 # Pacman Game in C++
 
-![image](https://github.com/israel-gs/pacman/assets/19498115/3f9dcf2b-f828-4f65-9f61-0350e54e49f2)
+![image](https://github.com/israel-gs/pacman/assets/19498115/bb48c65e-78d9-4294-a3ce-a8e60e84d8f8)
