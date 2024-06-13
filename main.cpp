@@ -1,5 +1,6 @@
 #include "miniwin.h"
 #include <vector>
+#include <sstream>
 using namespace miniwin;
 using namespace std;
 
@@ -12,13 +13,12 @@ enum EstadoFantasma { PERSECUCION, DISPERSION, HUIDA };
 class Mapa
 {
 private:
-	vector<vector<char>> laberinto;
+    vector<vector<char>> laberinto;
 
 public:
-	Mapa()
-	{
-
-		vector<char> fila1 = {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'};
+    Mapa()
+    {
+        vector<char> fila1 = {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'};
         vector<char> fila2 = {'#', 'o', '.', '.', '.', '.', '.', '.', '.', '#', '.', '.', '.', '.', '.', '.', '.', 'o', '#'};
         vector<char> fila3 = {'#', '.', '#', '#', '.', '#', '#', '#', '.', '#', '.', '#', '#', '#', '.', '#', '#', '.', '#'};
         vector<char> fila4 = {'#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#'};
@@ -61,41 +61,41 @@ public:
         laberinto.push_back(fila19);
         laberinto.push_back(fila20);
         laberinto.push_back(fila21);
-	}
+    }
 
-	void draw()
-	{
-	    int y = 0;
-	    for (auto it = laberinto.begin(); it != laberinto.end(); ++it, ++y)
-	    {
-	        int x = 0;
-	        for (auto jt = it->begin(); jt != it->end(); ++jt, ++x)
-	        {
-	            if (*jt == '#')
-	            {
-	                color(AZUL);
-	                rectangulo_lleno(x * TAMANO, y * TAMANO, (x + 1) * TAMANO, (y + 1) * TAMANO);
-	            }
-	            else if (*jt == '.')
-	            {
-	                color(BLANCO);
-	                circulo_lleno(x * TAMANO + TAMANO / 2, y * TAMANO + TAMANO / 2, TAMANO / 8);
-	            }
-	            else if (*jt == 'o')
+    void draw()
+    {
+        int y = 0;
+        for (auto it = laberinto.begin(); it != laberinto.end(); ++it, ++y)
+        {
+            int x = 0;
+            for (auto jt = it->begin(); jt != it->end(); ++jt, ++x)
+            {
+                if (*jt == '#')
+                {
+                    color(AZUL);
+                    rectangulo_lleno(x * TAMANO, y * TAMANO, (x + 1) * TAMANO, (y + 1) * TAMANO);
+                }
+                else if (*jt == '.')
+                {
+                    color(BLANCO);
+                    circulo_lleno(x * TAMANO + TAMANO / 2, y * TAMANO + TAMANO / 2, TAMANO / 8);
+                }
+                else if (*jt == 'o')
                 {
                     color(ROJO);
                     circulo_lleno(x * TAMANO + TAMANO / 2, y * TAMANO + TAMANO / 2, TAMANO / 4);
                 }
-	        }
-	    }
-	}
+            }
+        }
+    }
 
-	bool es_pared(int x, int y) const
-	{
-		return laberinto[y][x] == '#';
-	}
-	
-	bool hay_dot(int x, int y) const
+    bool es_pared(int x, int y) const
+    {
+        return laberinto[y][x] == '#';
+    }
+
+    bool hay_dot(int x, int y) const
     {
         return laberinto[y][x] == '.';
     }
@@ -138,8 +138,11 @@ public:
 
     void draw() const
     {
-        color(estado == HUIDA ? CYAN : ROJO);
-        circulo_lleno(x * size + size / 2, y * size + size / 2, size / 2);
+    	if(estado == HUIDA){
+    		color(CYAN);
+        	circulo_lleno(x * size + size / 2, y * size + size / 2, size / 2);	
+		}
+    
     }
 
     void set_estado(EstadoFantasma nuevo_estado)
@@ -165,6 +168,8 @@ public:
 
     int get_x() const { return x; }
     int get_y() const { return y; }
+    EstadoFantasma get_estado() const { return estado; }
+    void set_position(int new_x, int new_y) { x = new_x; y = new_y; }
 };
 
 class Pacman
@@ -174,11 +179,13 @@ private:
     int size;
     bool poder_activo;
     int duracion_poder;
+    int puntuacion;
+    int vidas;
 
 public:
-    Pacman(int _x, int _y, int _size) : x(_x), y(_y), size(_size), poder_activo(false), duracion_poder(0) {}
+    Pacman(int _x, int _y, int _size) : x(_x), y(_y), size(_size), poder_activo(false), duracion_poder(0), puntuacion(0), vidas(3) {}
 
-    void move(int dx, int dy, Mapa &mapa, vector<Fantasma*> &fantasmas)
+    void move(int dx, int dy, Mapa &mapa, vector<Fantasma*> &fantasmas, bool &end)
     {
         if (x == 0 && dx == -1)
         {
@@ -199,11 +206,39 @@ public:
                 if (mapa.hay_dot(x, y))
                 {
                     mapa.comer_dot(x, y);
+                    puntuacion += 10;
                 }
                 if (mapa.hay_power_pellet(x, y))
                 {
                     mapa.comer_power_pellet(x, y);
                     activar_poder(fantasmas);
+                    puntuacion += 50;
+                }
+            }
+        }
+
+        // Comprobar si Pacman se encuentra con algún fantasma
+        for (auto &fantasma : fantasmas)
+        {
+            if (x == fantasma->get_x() && y == fantasma->get_y())
+            {
+                if (poder_activo && fantasma->get_estado() == HUIDA)
+                {
+                    puntuacion += 200; // Pacman come al fantasma
+                    fantasma->set_position(9, 10); // Reiniciar posición del fantasma
+                    fantasma->set_estado(PERSECUCION);
+                }
+                else
+                {
+                    vidas--;
+                    if (vidas <= 0)
+                    {
+                        end = true; // Fin del juego
+                    }
+                    else
+                    {
+                        x = 1; y = 1; // Reiniciar posición de Pacman
+                    }
                 }
             }
         }
@@ -235,6 +270,14 @@ public:
         {
             poder_activo = false;
         }
+    }
+
+    void draw_score_and_lives() const
+    {
+        stringstream ss;
+        ss << "Score: " << puntuacion << "   Lives: " << vidas;
+        color(BLANCO);
+        texto(10, 530, ss.str().c_str());
     }
 
     int get_x() const { return x; }
@@ -276,8 +319,13 @@ public:
             y = actual_y - 1;
         }
     }
+    
+    void draw() const 
+    {
+        color(ROJO);
+        circulo_lleno(x * size + size / 2, y * size + size / 2, size / 2);
+    }
 };
-
 
 class Pinky : public Fantasma
 {
@@ -336,18 +384,21 @@ public:
             y = actual_y - 1;
         }
     }
+    
+    void draw() const     {
+        color(MAGENTA);
+        circulo_lleno(x * size + size / 2, y * size + size / 2, size / 2);
+    }
 };
-
-
 
 int main()
 {
-    vredimensiona(ANCHO * TAMANO, ALTO * TAMANO);
+    vredimensiona(ANCHO * TAMANO, ALTO * TAMANO +30);
 
     Mapa mapa;
     Pacman pacman(1, 1, TAMANO);
-    Blinky blinky(9, 10, TAMANO, 1);
-    Pinky pinky(10, 10, TAMANO, 1);
+    Blinky blinky(9, 8, TAMANO, 1);
+    Pinky pinky(9, 9, TAMANO, 1);
 
     vector<Fantasma*> fantasmas = { &blinky, &pinky };
 
@@ -359,6 +410,9 @@ int main()
 
         mapa.draw();
         pacman.draw();
+        blinky.draw();
+        pinky.draw();
+        pacman.draw_score_and_lives();
 
         for (auto &fantasma : fantasmas)
         {
@@ -375,16 +429,16 @@ int main()
         switch (t)
         {
         case DERECHA:
-            pacman.move(1, 0, mapa, fantasmas);
+            pacman.move(1, 0, mapa, fantasmas, end);
             break;
         case IZQUIERDA:
-            pacman.move(-1, 0, mapa, fantasmas);
+            pacman.move(-1, 0, mapa, fantasmas, end);
             break;
         case ARRIBA:
-            pacman.move(0, -1, mapa, fantasmas);
+            pacman.move(0, -1, mapa, fantasmas, end);
             break;
         case ABAJO:
-            pacman.move(0, 1, mapa, fantasmas);
+            pacman.move(0, 1, mapa, fantasmas, end);
             break;
         case ESCAPE:
             end = true;
@@ -396,4 +450,5 @@ int main()
 
     return 0;
 }
+
 
