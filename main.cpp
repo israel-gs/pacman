@@ -7,6 +7,8 @@ const int ANCHO = 19;
 const int ALTO = 21;
 const int TAMANO = 25;
 
+enum EstadoFantasma { PERSECUCION, DISPERSION, HUIDA };
+
 class Mapa
 {
 private:
@@ -17,7 +19,7 @@ public:
 	{
 
 		vector<char> fila1 = {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'};
-        vector<char> fila2 = {'#', '.', '.', '.', '.', '.', '.', '.', '.', '#', '.', '.', '.', '.', '.', '.', '.', '.', '#'};
+        vector<char> fila2 = {'#', 'o', '.', '.', '.', '.', '.', '.', '.', '#', '.', '.', '.', '.', '.', '.', '.', 'o', '#'};
         vector<char> fila3 = {'#', '.', '#', '#', '.', '#', '#', '#', '.', '#', '.', '#', '#', '#', '.', '#', '#', '.', '#'};
         vector<char> fila4 = {'#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#'};
         vector<char> fila5 = {'#', '.', '#', '#', '.', '#', '.', '#', '#', '#', '#', '#', '.', '#', '.', '#', '#', '.', '#'};
@@ -35,7 +37,7 @@ public:
         vector<char> fila17 = {'#', '#', '.', '#', '.', '#', '.', '#', '#', '#', '#', '#', '.', '#', '.', '#', '.', '#', '#'};
         vector<char> fila18 = {'#', '.', '.', '.', '.', '#', '.', '.', '.', '#', '.', '.', '.', '#', '.', '.', '.', '.', '#'};
         vector<char> fila19 = {'#', '.', '#', '#', '#', '#', '#', '#', '.', '#', '.', '#', '#', '#', '#', '#', '#', '.', '#'};
-        vector<char> fila20 = {'#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#'};
+        vector<char> fila20 = {'#', 'o', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', 'o', '#'};
         vector<char> fila21 = {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'};
 
         laberinto.push_back(fila1);
@@ -79,6 +81,11 @@ public:
 	                color(BLANCO);
 	                circulo_lleno(x * TAMANO + TAMANO / 2, y * TAMANO + TAMANO / 2, TAMANO / 8);
 	            }
+	            else if (*jt == 'o')
+                {
+                    color(ROJO);
+                    circulo_lleno(x * TAMANO + TAMANO / 2, y * TAMANO + TAMANO / 2, TAMANO / 4);
+                }
 	        }
 	    }
 	}
@@ -92,6 +99,10 @@ public:
     {
         return laberinto[y][x] == '.';
     }
+    bool hay_power_pellet(int x, int y) const
+    {
+        return laberinto[y][x] == 'o';
+    }
 
     void comer_dot(int x, int y)
     {
@@ -100,95 +111,289 @@ public:
             laberinto[y][x] = ' ';
         }
     }
+    void comer_power_pellet(int x, int y)
+    {
+        if (laberinto[y][x] == 'o')
+        {
+            laberinto[y][x] = ' ';
+        }
+    }
+};
+
+class Pacman;
+class Fantasma
+{
+protected:
+    int x, y;
+    int size;
+    EstadoFantasma estado;
+    int velocidad;
+    int contador_huida;
+
+public:
+    Fantasma(int _x, int _y, int _size, int _velocidad)
+        : x(_x), y(_y), size(_size), estado(PERSECUCION), velocidad(_velocidad), contador_huida(0) {}
+
+    virtual void mover(const Mapa& mapa, const Pacman& pacman) = 0;
+
+    void draw() const
+    {
+        color(estado == HUIDA ? CYAN : ROJO);
+        circulo_lleno(x * size + size / 2, y * size + size / 2, size / 2);
+    }
+
+    void set_estado(EstadoFantasma nuevo_estado)
+    {
+        estado = nuevo_estado;
+        if (nuevo_estado == HUIDA)
+        {
+            contador_huida = 200; // Duración del estado de huida
+        }
+    }
+
+    void actualizar_estado()
+    {
+        if (estado == HUIDA && contador_huida > 0)
+        {
+            --contador_huida;
+        }
+        if (contador_huida == 0 && estado == HUIDA)
+        {
+            estado = PERSECUCION;
+        }
+    }
+
+    int get_x() const { return x; }
+    int get_y() const { return y; }
 };
 
 class Pacman
 {
 private:
-	int x, y;
-	int size;
+    int x, y;
+    int size;
+    bool poder_activo;
+    int duracion_poder;
 
 public:
-	Pacman(int _x, int _y, int _size) : x(_x), y(_y), size(_size) {}
+    Pacman(int _x, int _y, int _size) : x(_x), y(_y), size(_size), poder_activo(false), duracion_poder(0) {}
 
-	void move(int dx, int dy,  Mapa &mapa)
-	{
-		if (x == 0 && dx == -1)
-		{
-			x = ANCHO - 1;
-		}
-		else if (x == ANCHO - 1 && dx == 1)
-		{
-			x = 0;
-		}
-		else
-		{
-			int nuevo_x = x + dx;
-			int nuevo_y = y + dy;
-			if (!mapa.es_pared(nuevo_x, nuevo_y))
-			{
-				x = nuevo_x;
+    void move(int dx, int dy, Mapa &mapa, vector<Fantasma*> &fantasmas)
+    {
+        if (x == 0 && dx == -1)
+        {
+            x = ANCHO - 1;
+        }
+        else if (x == ANCHO - 1 && dx == 1)
+        {
+            x = 0;
+        }
+        else
+        {
+            int nuevo_x = x + dx;
+            int nuevo_y = y + dy;
+            if (!mapa.es_pared(nuevo_x, nuevo_y))
+            {
+                x = nuevo_x;
                 y = nuevo_y;
                 if (mapa.hay_dot(x, y))
                 {
                     mapa.comer_dot(x, y);
                 }
+                if (mapa.hay_power_pellet(x, y))
+                {
+                    mapa.comer_power_pellet(x, y);
+                    activar_poder(fantasmas);
+                }
+            }
+        }
+    }
 
-			}
-		}
-	}
+    void draw() const
+    {
+        color(AMARILLO);
+        circulo_lleno(x * size + size / 2, y * size + size / 2, size / 2);
+    }
 
-	void draw() const
-	{
-		color(AMARILLO);
-		circulo_lleno(x * size + size / 2, y * size + size / 2, size / 2);
-	}
+    void activar_poder(vector<Fantasma*> &fantasmas)
+    {
+        poder_activo = true;
+        duracion_poder = 200; // Duración del efecto de los power pellets
+        for (auto &fantasma : fantasmas)
+        {
+            fantasma->set_estado(HUIDA);
+        }
+    }
 
-	int get_x() const { return x; }
-	int get_y() const { return y; }
-	int get_size() const { return size; }
+    void actualizar_poder()
+    {
+        if (poder_activo && duracion_poder > 0)
+        {
+            --duracion_poder;
+        }
+        if (duracion_poder == 0)
+        {
+            poder_activo = false;
+        }
+    }
+
+    int get_x() const { return x; }
+    int get_y() const { return y; }
+    int get_size() const { return size; }
 };
+
+class Blinky : public Fantasma
+{
+public:
+    Blinky(int _x, int _y, int _size, int _velocidad)
+        : Fantasma(_x, _y, _size, _velocidad) {}
+
+    void mover(const Mapa& mapa, const Pacman& pacman) override
+    {
+        // Obtener la posición actual de Blinky
+        int actual_x = get_x();
+        int actual_y = get_y();
+
+        // Obtener la posición actual de Pacman
+        int pacman_x = pacman.get_x();
+        int pacman_y = pacman.get_y();
+
+        // Determinar la dirección hacia la que debe moverse Blinky para perseguir a Pacman
+        if (actual_x < pacman_x && !mapa.es_pared(actual_x + 1, actual_y))
+        {
+            x = actual_x + 1;
+        }
+        else if (actual_x > pacman_x && !mapa.es_pared(actual_x - 1, actual_y))
+        {
+            x = actual_x - 1;
+        }
+        else if (actual_y < pacman_y && !mapa.es_pared(actual_x, actual_y + 1))
+        {
+            y = actual_y + 1;
+        }
+        else if (actual_y > pacman_y && !mapa.es_pared(actual_x, actual_y - 1))
+        {
+            y = actual_y - 1;
+        }
+    }
+};
+
+
+class Pinky : public Fantasma
+{
+public:
+    Pinky(int _x, int _y, int _size, int _velocidad)
+        : Fantasma(_x, _y, _size, _velocidad) {}
+
+    void mover(const Mapa& mapa, const Pacman& pacman) override
+    {
+        // Obtener la posición actual de Pinky
+        int actual_x = get_x();
+        int actual_y = get_y();
+
+        // Obtener la posición actual de Pacman
+        int pacman_x = pacman.get_x();
+        int pacman_y = pacman.get_y();
+
+        // Calcular la posición objetivo cuatro cuadros delante de Pacman
+        int objetivo_x = pacman_x;
+        int objetivo_y = pacman_y;
+
+        // Determinar la dirección hacia la que debe moverse Pinky para anticipar a Pacman
+        if (pacman.get_x() > 3 && !mapa.es_pared(pacman.get_x() - 4, pacman.get_y()))
+        {
+            objetivo_x = pacman.get_x() - 4;
+        }
+        else if (!mapa.es_pared(pacman.get_x() + 4, pacman.get_y()))
+        {
+            objetivo_x = pacman.get_x() + 4;
+        }
+
+        if (pacman.get_y() > 3 && !mapa.es_pared(pacman.get_x(), pacman.get_y() - 4))
+        {
+            objetivo_y = pacman.get_y() - 4;
+        }
+        else if (!mapa.es_pared(pacman.get_x(), pacman.get_y() + 4))
+        {
+            objetivo_y = pacman.get_y() + 4;
+        }
+
+        // Mover Pinky hacia el objetivo
+        if (actual_x < objetivo_x && !mapa.es_pared(actual_x + 1, actual_y))
+        {
+            x = actual_x + 1;
+        }
+        else if (actual_x > objetivo_x && !mapa.es_pared(actual_x - 1, actual_y))
+        {
+            x = actual_x - 1;
+        }
+        else if (actual_y < objetivo_y && !mapa.es_pared(actual_x, actual_y + 1))
+        {
+            y = actual_y + 1;
+        }
+        else if (actual_y > objetivo_y && !mapa.es_pared(actual_x, actual_y - 1))
+        {
+            y = actual_y - 1;
+        }
+    }
+};
+
+
 
 int main()
 {
-	vredimensiona(ANCHO * TAMANO, ALTO * TAMANO);
+    vredimensiona(ANCHO * TAMANO, ALTO * TAMANO);
 
-	Mapa mapa;
-	Pacman pacman(1, 1, TAMANO);
+    Mapa mapa;
+    Pacman pacman(1, 1, TAMANO);
+    Blinky blinky(9, 10, TAMANO, 1);
+    Pinky pinky(10, 10, TAMANO, 1);
 
-	bool end = false;
+    vector<Fantasma*> fantasmas = { &blinky, &pinky };
 
-	while (!end)
-	{
-		borra();
+    bool end = false;
 
-		mapa.draw();
-		pacman.draw();
+    while (!end)
+    {
+        borra();
 
-		refresca();
+        mapa.draw();
+        pacman.draw();
 
-		int t = tecla();
-		switch (t)
-		{
-		case DERECHA:
-			pacman.move(1, 0, mapa);
-			break;
-		case IZQUIERDA:
-			pacman.move(-1, 0, mapa);
-			break;
-		case ARRIBA:
-			pacman.move(0, -1, mapa);
-			break;
-		case ABAJO:
-			pacman.move(0, 1, mapa);
-			break;
-		case ESCAPE:
-			end = true;
-			break;
-		}
+        for (auto &fantasma : fantasmas)
+        {
+            fantasma->mover(mapa, pacman);
+            fantasma->actualizar_estado();
+            fantasma->draw();
+        }
 
-		espera(1);
-	}
+        pacman.actualizar_poder();
 
-	return 0;
+        refresca();
+
+        int t = tecla();
+        switch (t)
+        {
+        case DERECHA:
+            pacman.move(1, 0, mapa, fantasmas);
+            break;
+        case IZQUIERDA:
+            pacman.move(-1, 0, mapa, fantasmas);
+            break;
+        case ARRIBA:
+            pacman.move(0, -1, mapa, fantasmas);
+            break;
+        case ABAJO:
+            pacman.move(0, 1, mapa, fantasmas);
+            break;
+        case ESCAPE:
+            end = true;
+            break;
+        }
+
+        espera(1);
+    }
+
+    return 0;
 }
+
